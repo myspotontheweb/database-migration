@@ -1,0 +1,51 @@
+# migration/migration-job.yml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: migration-job-
+  labels:
+    jobgroup: migration
+spec:
+  template:
+    spec:
+      containers:
+      - name: flyway
+        image: flyway/flyway:8.5.9-alpine
+        args:
+        - info
+        - repair
+        - migrate
+        - info
+        env:
+        - name: FLYWAY_URL
+          value: jdbc:postgresql://postgresql:5432/postgres
+        - name: FLYWAY_USER
+          value: postgres
+        - name: FLYWAY_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name:  postgresql
+              key: postgres-password
+              optional: false
+        - name: FLYWAY_PLACEHOLDER_REPLACEMENT
+          value: "true"
+        - name: FLYWAY_PLACEHOLDERS_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: spring.datasource.username
+              optional: false
+        - name: FLYWAY_PLACEHOLDERS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secret
+              key: spring.datasource.password
+              optional: false
+        volumeMounts:
+        - mountPath: /flyway/sql
+          name: sql
+      volumes:
+      - name: sql
+        configMap:
+          name: postgres-configmap
+      restartPolicy: Never
