@@ -28,8 +28,6 @@ Chart has the following structure
     │   └── V1_4__create_demo_table.sql
     ├── templates
     │   ├── _helpers.tpl
-    │   ├── app-configmap.yaml
-    │   ├── app-secret.yaml
     │   ├── migration-configmap.yaml
     │   └── migration-job.yaml
     └── values.yaml
