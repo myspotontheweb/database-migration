@@ -8,6 +8,12 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+flyway:
+  command: migrate
+  placeholders:
+    username: mydatabase
+    password: mypassword
+
 db:
   host: postgresql
   port: 5432
@@ -17,6 +23,3 @@ db:
     name: postgresql
     key: postgres-password
 
-placeholders:
-  username: mydatabase
-  password: mypassword

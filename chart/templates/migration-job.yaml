@@ -13,7 +13,7 @@ spec:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         args:
-        - migrate
+        - {{ .Values.flyway.command }}
         env:
         - name: FLYWAY_URL
           value: "jdbc:postgresql://{{ .Values.db.host }}:{{ .Values.db.port }}/{{ .Values.db.name }}"
@@ -28,9 +28,9 @@ spec:
         - name: FLYWAY_PLACEHOLDER_REPLACEMENT
           value: "true"
         - name: FLYWAY_PLACEHOLDERS_USERNAME
-          value: {{ .Values.placeholders.username | quote }}
+          value: {{ .Values.flyway.placeholders.username | quote }}
         - name: FLYWAY_PLACEHOLDERS_PASSWORD
-          value: {{ .Values.placeholders.password | quote }}
+          value: {{ .Values.flyway.placeholders.password | quote }}
         volumeMounts:
         - mountPath: /flyway/sql
           name: sql
