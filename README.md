@@ -7,11 +7,16 @@ This repo is inspired by the following blog posting
 
 # Usage
 
-To run a migration 
+Start up a postgres database
+
+     helm repo add bitnami https://charts.bitnami.com/bitnami
+     helm install postgresql bitnami/postgresql --version 11.6.6:w
+
+Run a migration by running the helm chart in this repo
 
     helm install migrate1 chart
 
-You can then review the migration logs as follows
+Review the migration logs as follows:
 
     kubectl logs -l job-name=migrate1
 
@@ -33,4 +38,3 @@ Chart has the following structure
     └── values.yaml
 
 Flyway migrations are stored under the "migrations" subdirectory and pulled into the temple "migration-configmap.yaml"
-
