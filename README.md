@@ -10,7 +10,7 @@ This repo is inspired by the following blog posting
 Start up a postgres database
 
      helm repo add bitnami https://charts.bitnami.com/bitnami
-     helm install postgresql bitnami/postgresql --version 11.6.6:w
+     helm install postgresql bitnami/postgresql --version 11.6.6
 
 Run a migration by running the helm chart in this repo
 
