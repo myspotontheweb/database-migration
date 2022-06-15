@@ -1,0 +1,26 @@
+# Default values for db-migrate.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: flyway/flyway
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+db:
+  host: postgresql
+  port: 5432
+  name: postgres
+  adminUser: postgres
+  secret:
+    name: postgresql
+    key: postgres-password
+
+app:
+  configmap:
+    name: app-configmap 
+    key: spring.datasource.username
+  secret:
+    name: app-secret 
+    key: spring.datasource.password

@@ -2,43 +2,41 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  generateName: migration-job-
+  name: {{ .Release.Name }}
   labels:
     jobgroup: migration
+    {{- include "db-migrate.labels" . | nindent 4 }}
 spec:
   template:
     spec:
       containers:
-      - name: flyway
-        image: flyway/flyway:8.5.9-alpine
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         args:
-        - info
-        - repair
         - migrate
-        - info
         env:
         - name: FLYWAY_URL
-          value: jdbc:postgresql://postgresql:5432/postgres
+          value: "jdbc:postgresql://{{ .Values.db.host }}:{{ .Values.db.port }}/{{ .Values.db.name }}"
         - name: FLYWAY_USER
-          value: postgres
+          value: {{ .Values.db.adminUser }}
         - name: FLYWAY_PASSWORD
           valueFrom:
             secretKeyRef:
-              name:  postgresql
-              key: postgres-password
+              name:  {{ .Values.db.secret.name }}
+              key: {{ .Values.db.secret.key }}
               optional: false
         - name: FLYWAY_PLACEHOLDER_REPLACEMENT
           value: "true"
         - name: FLYWAY_PLACEHOLDERS_USERNAME
           valueFrom:
             configMapKeyRef:
-              name: app-configmap
+              name: {{ .Release.Name }}-app-configmap
               key: spring.datasource.username
               optional: false
         - name: FLYWAY_PLACEHOLDERS_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: app-secret
+              name: {{ .Release.Name }}-app-secret
               key: spring.datasource.password
               optional: false
         volumeMounts:
@@ -47,5 +45,5 @@ spec:
       volumes:
       - name: sql
         configMap:
-          name: postgres-configmap
+          name: {{ .Release.Name }}-migrations
       restartPolicy: Never

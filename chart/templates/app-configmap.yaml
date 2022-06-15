@@ -1,7 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: app-configmap
+  name: {{ .Release.Name }}-app-configmap
+  labels:
+    {{- include "db-migrate.labels" . | nindent 4 }}
 data:
   spring.datasource.username: post_service
   spring.datasource.driver-class-name: org.postgresql.Driver
