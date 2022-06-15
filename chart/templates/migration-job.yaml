@@ -28,17 +28,9 @@ spec:
         - name: FLYWAY_PLACEHOLDER_REPLACEMENT
           value: "true"
         - name: FLYWAY_PLACEHOLDERS_USERNAME
-          valueFrom:
-            configMapKeyRef:
-              name: {{ .Release.Name }}-app-configmap
-              key: spring.datasource.username
-              optional: false
+          value: {{ .Values.placeholders.username | quote }}
         - name: FLYWAY_PLACEHOLDERS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Release.Name }}-app-secret
-              key: spring.datasource.password
-              optional: false
+          value: {{ .Values.placeholders.password | quote }}
         volumeMounts:
         - mountPath: /flyway/sql
           name: sql
